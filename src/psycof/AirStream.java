@@ -4,7 +4,7 @@ import psyc.PsycState;
 
 public class AirStream extends PsycState{
 	
-	double AirFlow;
+	double AirFlow; // Flow in Kg of Dry air in second
 
 	public AirStream() {
 		// TODO Auto-generated constructor stub
@@ -110,8 +110,33 @@ public class AirStream extends PsycState{
 		System.out.printf("\nFlow Rate (Kgda / s) = %f\n", this.AirFlow);
 		super.Print();
 	}*/
-	
-	
-	
+	/**
+	 * 
+	 * @param EffectiveCrossSection in m^2 of the particular area
+	 * @return Dry Kata cooling power in Watt / m^2
+	 */
+	public double DryKataCoolingPower(double EffectiveCrossSection){ 
+		double V = this.FlowRate()/EffectiveCrossSection; // Calculating velocity in m/s
+		if(V>1){
+			return (5.44+19.62*Math.sqrt(V))*(36.5-this.DryBulbTemp());
+		}else{
+			return (8.37+16.74*Math.sqrt(V))*(36.5-this.DryBulbTemp());
+		}
+		// Source: Misra, G.B., ‘Mine Environment and ventilation’,  OUP, 1986, 12th Impression (2006),	(p: 212-214)
+	}
+	/**
+	 * 
+	 * @param EffectiveCrossSection in m^2 of the particular area
+	 * @return Wet Kata cooling power in Watt / m^2
+	 */
+	public double WetKataCoolingPower(double EffectiveCrossSection){ 
+		double V = this.FlowRate()/EffectiveCrossSection; // Calculating velocity in m/s
+		if(V>1){
+			return (4.19+46.05* Math.cbrt(V))*(36.5-this.WetBulbTemp());
+		}else{
+			return (14.65+35.59 * Math.cbrt(V))*(36.5-this.WetBulbTemp());
+		}
+		// Source: Misra, G.B., ‘Mine Environment and ventilation’,  OUP, 1986, 12th Impression (2006),	(p: 212-214)
+	}
 
 }
